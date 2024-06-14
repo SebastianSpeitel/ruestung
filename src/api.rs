@@ -97,7 +97,8 @@ impl<E, Q> Api<E, Q> {
     /// // `sub` will have the client already set
     /// let sub = api.into_new::<Sub>();
     /// ```
-    pub fn into_new<E2>(self) -> Api<E, <E2::Query as Join>::Left<Q>>
+    #[inline]
+    pub fn into_new<E2>(self) -> Api<E2, <E2::Query as Join>::Left<Q>>
     where
         E2: Endpoint,
         E2::Query: Join + Default,
@@ -105,6 +106,20 @@ impl<E, Q> Api<E, Q> {
         Api {
             endpoint: PhantomData,
             query: E2::Query::default().left(self.query),
+        }
+    }
+
+    /// Same as `into_new`, but takes a reference and clones the query
+    #[inline]
+    pub fn as_new<E2>(&self) -> Api<E2, <E2::Query as Join>::Left<Q>>
+    where
+        Q: Clone,
+        E2: Endpoint,
+        E2::Query: Join + Default,
+    {
+        Api {
+            endpoint: PhantomData,
+            query: E2::Query::default().left(self.query.clone()),
         }
     }
 
