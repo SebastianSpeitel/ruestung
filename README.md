@@ -2,10 +2,6 @@
 
 Typesafe REST client builder.
 
-## Name
-
-`Rust` + `REST` = `ruest` (already taken) => `ruestung` (german word for armor)
-
 ## Example
 
 ```rust
@@ -30,8 +26,12 @@ async fn main() {
 
     let fact = api.into_future().await.unwrap();
 
-    println!("{:#?}", fact);
+    dbg!(fact);
 }
 ```
 
 More complex examples can be found in the `examples` directory.
+
+## Name
+
+`Rust` + `REST` = `ruest` (already taken) => `ruestung` (german word for armor)
