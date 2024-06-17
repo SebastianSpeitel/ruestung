@@ -30,7 +30,13 @@ async fn main() {
 }
 ```
 
-More complex examples can be found in the `examples` directory.
+More complex examples can be found in the [`examples`](./examples) directory.
+
+## TODOs
+
+- [ ] More complex examples
+- [ ] Implement IntoFuture
+- [ ] Implement Stream for paginated endpoints
 
 ## Name
 
