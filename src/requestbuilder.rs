@@ -47,6 +47,25 @@ impl RequestBuilder {
         &mut self.request
     }
 
+    /// Append query pair
+    #[inline]
+    pub fn append_query_pair(&mut self, name: &str, value: &str) {
+        self.request
+            .url_mut()
+            .query_pairs_mut()
+            .append_pair(name, value);
+    }
+
+    /// Insert a header
+    #[inline]
+    pub fn insert_header(
+        &mut self,
+        key: impl reqwest::header::IntoHeaderName,
+        value: reqwest::header::HeaderValue,
+    ) {
+        self.request.headers_mut().insert(key, value);
+    }
+
     /// Add a status code to retry on
     #[inline]
     pub fn retry_on(&mut self, status: StatusCode) {
