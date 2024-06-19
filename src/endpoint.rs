@@ -1,7 +1,11 @@
 use reqwest::Method;
 use serde::de::DeserializeOwned;
 
-use crate::{query::Query, requestbuilder::RequestBuilder, takes::Takes};
+use crate::{
+    query::{Form, Json, Query},
+    requestbuilder::RequestBuilder,
+    takes::Takes,
+};
 
 /// Definition of an endpoint
 ///
@@ -55,6 +59,22 @@ pub trait EndpointExt: Endpoint {
         Self: Takes<T, SLOT> + Sized,
     {
         self.take(param)
+    }
+
+    #[inline]
+    fn set_form<T, const SLOT: u8>(self, param: T) -> <Self as Takes<Form<T>, SLOT>>::Taken
+    where
+        Self: Takes<Form<T>, SLOT> + Sized,
+    {
+        self.take(Form(param))
+    }
+
+    #[inline]
+    fn set_json<T, const SLOT: u8>(self, param: T) -> <Self as Takes<Json<T>, SLOT>>::Taken
+    where
+        Self: Takes<Json<T>, SLOT> + Sized,
+    {
+        self.take(Json(param))
     }
 
     #[inline]

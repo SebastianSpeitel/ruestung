@@ -93,6 +93,47 @@ impl<T> Takes<T> for Optional<T> {
     }
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct Form<T>(pub T);
+
+impl<T> Query for Form<T>
+where
+    T: serde::Serialize,
+{
+    #[inline]
+    fn build(&self, builder: &mut RequestBuilder) {
+        use reqwest::header::{HeaderValue, CONTENT_TYPE};
+        const HEADER_VALUE: HeaderValue =
+            HeaderValue::from_static("application/x-www-form-urlencoded");
+
+        let request = builder.request_mut();
+        if let Ok(body) = serde_urlencoded::to_string(&self.0) {
+            request.body_mut().replace(body.into());
+            request.headers_mut().insert(CONTENT_TYPE, HEADER_VALUE);
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Json<T>(pub T);
+
+impl<T> Query for Json<T>
+where
+    T: serde::Serialize,
+{
+    #[inline]
+    fn build(&self, builder: &mut RequestBuilder) {
+        use reqwest::header::{HeaderValue, CONTENT_TYPE};
+        const HEADER_VALUE: HeaderValue = HeaderValue::from_static("application/json");
+
+        let request = builder.request_mut();
+        if let Ok(body) = serde_json::to_vec(&self.0) {
+            request.body_mut().replace(body.into());
+            request.headers_mut().insert(CONTENT_TYPE, HEADER_VALUE);
+        }
+    }
+}
+
 impl<Q0> Query for (Q0,)
 where
     Q0: Query,
